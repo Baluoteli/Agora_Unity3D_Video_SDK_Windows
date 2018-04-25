@@ -68,11 +68,28 @@ void CAGEngineEventHandler::onError(int err, const char* msg){
 
 void CAGEngineEventHandler::onAudioQuality(uid_t uid, int quality, unsigned short delay, unsigned short lost){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onAudioQualityOfPeer\t%d\t%d\t%d\t%d", uid,quality,delay,lost);
 
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onAudioVolumeIndication(const AudioVolumeInfo* speakers, unsigned int speakerNumber, int totalVolume){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onReportAudioVolumeIndications\t%d",speakerNumber);
+
+	std::string strPostMsg = szMsg;
+	for (int i = 0; i < speakerNumber; i++){
+		AudioVolumeInfo *pAVI = (AudioVolumeInfo*)(speakers + i);
+		
+		sprintf_s(szMsg, "%s\t%d\t%d", strPostMsg.data(),pAVI->uid, pAVI->volume);
+		strPostMsg = szMsg;
+	}
+
+	sprintf_s(szMsg, "%s\t%d", strPostMsg.data(), totalVolume);
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onLeaveChannel(const RtcStats& stat){
@@ -88,19 +105,35 @@ void CAGEngineEventHandler::onLeaveChannel(const RtcStats& stat){
 
 void CAGEngineEventHandler::onRtcStats(const RtcStats& stat){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onReportRtcStats\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d", stat.duration, stat.txBytes, stat.rxBytes, stat.txAudioKBitRate,
+		stat.rxAudioKBitRate, stat.txVideoKBitRate, stat.rxVideoKBitRate);
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onMediaEngineEvent(int evt){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onMediaEngineEvent\t%d",evt);
 
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onAudioDeviceStateChanged(const char* deviceId, int deviceType, int deviceState){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onAudioDeviceStateChanged\t%s\t%d\t%d", deviceId, deviceType, deviceState);
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onVideoDeviceStateChanged(const char* deviceId, int deviceType, int deviceState){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onVideoDeviceStateChanged\t%s\t%d\t%d", deviceId, deviceType, deviceState);
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onClientRoleChanged(CLIENT_ROLE_TYPE oldRole, CLIENT_ROLE_TYPE newRole){
@@ -116,17 +149,34 @@ void CAGEngineEventHandler::onClientRoleChanged(CLIENT_ROLE_TYPE oldRole, CLIENT
 
 void CAGEngineEventHandler::onNetworkQuality(int quality){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onNetworkQualityOfPeer\t%d", quality);
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onFirstLocalVideoFrame(int width, int height, int elapsed){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onFirstLocalVideoFrame\t%d\t%d\t%d", width,height,elapsed);
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onFirstRemoteVideoDecoded(uid_t uid, int width, int height, int elapsed){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onFirstRemoteVideoFrameDecoded\t%d\t%d\t%d\t%d", uid,width, height, elapsed);
+
+	postMsg(szMsg);
 }
+
 void CAGEngineEventHandler::onFirstRemoteVideoFrame(uid_t uid, int width, int height, int elapsed){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onFirstRemoteVideoFrameRendered\t%d\t%d\t%d\t%d", uid, width, height, elapsed);
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onUserJoined(uid_t uid, int elapsed){
@@ -153,10 +203,20 @@ void CAGEngineEventHandler::onUserOffline(uid_t uid, USER_OFFLINE_REASON_TYPE re
 
 void CAGEngineEventHandler::onUserMuteAudio(uid_t uid, bool muted){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onAudioMutedByPeer\t%d\t%d", uid, muted);
+
+	postMsg(szMsg);
 }
+
 void CAGEngineEventHandler::onUserMuteVideo(uid_t uid, bool muted){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onVideoMutedByPeer\t%d\t%d", uid, muted);
+
+	postMsg(szMsg);
 }
+
 void CAGEngineEventHandler::onApiCallExecuted(const char* api, int error){
 	
 	CAgoraWrapperUtilc::AgoraOutDebugStr(_T("%s(%s,%d)"),_T(__FUNCTION__),CAgoraWrapperUtilc::s2cs(api),error);
@@ -170,10 +230,21 @@ void CAGEngineEventHandler::onApiCallExecuted(const char* api, int error){
 
 void CAGEngineEventHandler::onLocalVideoStats(const LocalVideoStats& stats){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onLocalVideoStats\t%d\t%d", stats.sentBitrate, stats.sentFrameRate);
+
+	postMsg(szMsg);
 }
+
 void CAGEngineEventHandler::onRemoteVideoStats(const RemoteVideoStats& stats){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onRemoteVideoStats\t%d\t%d\t%d\t%d\t%d\t%d\t%d", stats.uid, stats.delay, stats.width, stats.height,
+		stats.receivedBitrate, stats.receivedFrameRate, stats.rxStreamType);
+
+	postMsg(szMsg);
 }
+
 void CAGEngineEventHandler::onCameraReady(){
 
 	CAgoraWrapperUtilc::AgoraOutDebugStr(_T("%s()"),_T(__FUNCTION__));
@@ -187,30 +258,55 @@ void CAGEngineEventHandler::onCameraReady(){
 
 void CAGEngineEventHandler::onVideoStopped(){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onVideoStopped");
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onConnectionLost(){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onConnectionLost");
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onConnectionInterrupted(){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onConnectionInterrupted");
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onUserEnableVideo(uid_t uid, bool enabled){
 
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onVideoEnabledByPeer\t%d\t%d",uid,enabled);
+
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onStartRecordingService(int error){
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onStartRecordingService\t%d",error);
 
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onStopRecordingService(int error){
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onStopRecordingService\t%d",error);
 
+	postMsg(szMsg);
 }
 
 void CAGEngineEventHandler::onRefreshRecordingServiceStatus(int status){
+	char szMsg[MAX_PATH] = { '\0' };
+	sprintf_s(szMsg, "onVideoEnabledByPeer\t%d", status);
 
+	postMsg(szMsg);
 }
 
 inline void CAGEngineEventHandler::postMsg(const std::string &msg)

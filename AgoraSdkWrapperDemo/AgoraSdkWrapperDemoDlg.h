@@ -57,4 +57,8 @@ private:
 	std::string m_strChannelName;
 	UINT m_uID;
 	uint8_t m_txtId;
+
+	//data
+	unsigned char* m_pBuffer;
+	int m_nBufferLen;
 };

@@ -48,7 +48,9 @@ END_MESSAGE_MAP()
 
 
 CAgoraSdkWrapperDemoDlg::CAgoraSdkWrapperDemoDlg(CWnd* pParent /*=NULL*/)
-	: CDialogEx(CAgoraSdkWrapperDemoDlg::IDD, pParent)
+	: CDialogEx(CAgoraSdkWrapperDemoDlg::IDD, pParent),
+	m_pBuffer(nullptr),
+	m_nBufferLen(0)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -198,7 +200,7 @@ void CAgoraSdkWrapperDemoDlg::OnTimer(UINT_PTR nIDEvent){
 		KillTimer(nIDEvent);
 		EnterChannel();
 
-		SetTimer(2, 40, nullptr);
+		SetTimer(2, 60, nullptr);
 	}
 
 	if (2 == nIDEvent){
@@ -207,7 +209,23 @@ void CAgoraSdkWrapperDemoDlg::OnTimer(UINT_PTR nIDEvent){
 		OutputDebugStringA( msg);
 		freeObject(msg);
 
-		updateTexture(m_txtId, m_uID);
+		//updateTexture(m_txtId, m_uID);
+		if (nullptr == m_pBuffer){
+			m_nBufferLen = 640 * 480 * 4;
+			m_pBuffer = new unsigned char[m_nBufferLen];
+			ZeroMemory(m_pBuffer, m_nBufferLen);
+		}
+
+		int nWidth = 0; int nHeight = 0;
+		getRGBAVideoData(11111, m_pBuffer, m_nBufferLen, nWidth, nHeight);
+
+		FILE* fileRGBA = fopen("../Debug/rgba.yuv", "ab+");
+		if (fileRGBA){
+
+			fwrite(m_pBuffer, 1, m_nBufferLen, fileRGBA);
+			fclose(fileRGBA);
+			fileRGBA = nullptr;
+		}
 	}
 
 }

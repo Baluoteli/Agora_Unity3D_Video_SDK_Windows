@@ -89,6 +89,8 @@ extern "C" {
     AGORA_DllExport int generateNativeTexture();
     AGORA_DllExport int updateTexture(int tex, unsigned int uid);
     AGORA_DllExport void deleteTexture(int tex);
+
+	AGORA_DllExport int getRGBAVideoData(UINT uid, unsigned char* pData,int &nBufferLen,int &nWidth,int &nHeight);
     
     //MessageLoop
     AGORA_DllExport int getMessageCount();

@@ -14,16 +14,16 @@ CExtendVideoFrameObserver::CExtendVideoFrameObserver() :m_uUidSelf(0)
 	m_lpImageBufferRemote = new BYTE[0x800000];
 
 	std::string strPathLocal = CAgoraWrapperUtilc::getAbsoluteDir() + "Localyuv.yuv";
-	m_fileLocalYUV.openMedia(strPathLocal.data());
+	//m_fileLocalYUV.openMedia(strPathLocal.data());
 
 	std::string strPathRemote = CAgoraWrapperUtilc::getAbsoluteDir() + "RemoteYuv.yuv";
-	m_fileRemoteYUV.openMedia(strPathRemote.data());
+	//m_fileRemoteYUV.openMedia(strPathRemote.data());
 }
 
 CExtendVideoFrameObserver::~CExtendVideoFrameObserver()
 {
-	m_fileRemoteYUV.close();
-	m_fileLocalYUV.close();
+	//m_fileRemoteYUV.close();
+	//m_fileLocalYUV.close();
 
 	delete[] m_lpImageBufferLocal; 
 	m_lpImageBufferLocal = nullptr;
@@ -67,7 +67,7 @@ bool CExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 	CBufferMgr::getInstance()->pushYUVBuffer(m_uUidSelf, (uint8_t*)m_lpImageBufferLocal, nBufferLen, nWidth, nHeight);
 #endif;
 
-	libyuv::I420ToARGB((uint8_t*)videoFrame.yBuffer, videoFrame.yStride,
+	libyuv::I420ToRGBA((uint8_t*)videoFrame.yBuffer, videoFrame.yStride,
 								  (uint8_t*)videoFrame.uBuffer, videoFrame.uStride,
 								  (uint8_t*)videoFrame.vBuffer, videoFrame.vStride,
 								  m_lpImageBufferLocal,nWidth * 4,
@@ -147,7 +147,7 @@ bool CExtendVideoFrameObserver::onRenderVideoFrame(unsigned int uid, VideoFrame&
 		nWidth, nHeight);
 	int nBufferLen = nWidth * nHeight * 4;
 	//m_fileLocalYUV.write((char*)m_lpImageBufferLocal, nBufferLen);
-	CBufferMgr::getInstance()->pushYUVBuffer(m_uUidSelf, (uint8_t*)m_lpImageBufferLocal, nBufferLen, nWidth, nHeight);
+	CBufferMgr::getInstance()->pushYUVBuffer(uid, (uint8_t*)m_lpImageBufferLocal, nBufferLen, nWidth, nHeight);
 
 	return true;
 }

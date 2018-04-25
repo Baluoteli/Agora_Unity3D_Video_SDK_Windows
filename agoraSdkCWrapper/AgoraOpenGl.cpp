@@ -69,12 +69,12 @@ void CAgoraOpenGl::RenderTime(int value){
 CAgoraOpenGl::CAgoraOpenGl(){
 
 	std::string strPathRGBA = CAgoraWrapperUtilc::getAbsoluteDir() + "openGl_argb.yuv";
-	m_fileRGBA.openMedia(strPathRGBA.data());
+	//m_fileRGBA.openMedia(strPathRGBA.data());
 }
 
 CAgoraOpenGl::~CAgoraOpenGl(){
 
-	m_fileRGBA.close();
+	//m_fileRGBA.close();
 }
 
 void CAgoraOpenGl::InitOpenGl(const int &nWidth,const int &nHeight){

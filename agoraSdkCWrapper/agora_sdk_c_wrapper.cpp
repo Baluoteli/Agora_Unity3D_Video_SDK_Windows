@@ -508,6 +508,14 @@ int getMessageCount(){
 	}
 }
 
+int getRGBAVideoData(UINT uid, unsigned char* pData, int &nBufferLen, int &nWidth, int &nHeight){
+
+	if (gPAgoraObject && gPBufferMgr){
+
+		return gPBufferMgr->popYUVBuffer(uid, pData, nBufferLen, nWidth, nHeight);
+	}
+}
+
 char *getMessage(){
 
 	if (gPFifoCmd){
