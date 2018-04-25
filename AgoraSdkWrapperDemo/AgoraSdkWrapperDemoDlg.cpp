@@ -195,8 +195,8 @@ void CAgoraSdkWrapperDemoDlg::OnTimer(UINT_PTR nIDEvent){
 
 	if (1 == nIDEvent){
 
-		EnterChannel();
 		KillTimer(nIDEvent);
+		EnterChannel();
 
 		SetTimer(2, 40, nullptr);
 	}
@@ -206,6 +206,8 @@ void CAgoraSdkWrapperDemoDlg::OnTimer(UINT_PTR nIDEvent){
 		char* msg = getMessage();
 		OutputDebugStringA( msg);
 		freeObject(msg);
+
+		updateTexture(m_txtId, m_uID);
 	}
 
 }
@@ -229,11 +231,14 @@ inline void CAgoraSdkWrapperDemoDlg::EnterChannel(){
 
 	const char *pszChannlKey = "";
 	joinChannel(pszChannlKey, m_strChannelName.data(), "1", m_uID);
+
+	m_txtId = generateNativeTexture();
 }
 
 inline void CAgoraSdkWrapperDemoDlg::ExitChannel(){
 
 	//leavechannel todo
+	deleteTexture(1);
 	disableVideoObserver();
 
 	leaveChannel();

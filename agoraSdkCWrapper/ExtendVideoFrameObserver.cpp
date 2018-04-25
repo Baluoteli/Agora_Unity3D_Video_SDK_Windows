@@ -36,7 +36,7 @@ CExtendVideoFrameObserver::~CExtendVideoFrameObserver()
 bool CExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 {
 	DWORD dStart = GetTickCount();
-	CAgoraWrapperUtilc::AgoraOutDebugStr(_T(__FUNCTION__));
+	//CAgoraWrapperUtilc::AgoraOutDebugStr(_T(__FUNCTION__));
 
 #if 0
 	std::string sPathYUV = CAgoraWrapperUtilc::getAbsoluteDir() + "123.yuv";
@@ -114,7 +114,7 @@ bool CExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 #endif
 
 	DWORD dwEnd = GetTickCount();
-	CAgoraWrapperUtilc::AgoraOutDebugStr(_T("onCaptureVideoFrame : %u\n"),dwEnd - dStart);
+	//CAgoraWrapperUtilc::AgoraOutDebugStr(_T("onCaptureVideoFrame : %u\n"),dwEnd - dStart);
 
 	return FALSE;
 }

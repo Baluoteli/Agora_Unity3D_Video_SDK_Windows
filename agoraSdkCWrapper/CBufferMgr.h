@@ -11,7 +11,7 @@ public:
 	~CArrayBuffer();
 
 	bool push(int nWidth, int nHeight, uint8_t* pBufferIn,const int &nBufferLen);
-	bool pop(uint8_t* pBufferOut,int &nBufferLen);
+	bool pop(uint8_t* pBufferOut,int &nBufferLen,int &nWidth,int &nHeight);
 
 	inline bool isFull();
 	inline bool isEmpty();

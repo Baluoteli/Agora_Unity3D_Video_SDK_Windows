@@ -4,6 +4,7 @@
 
 #pragma once
 #include <iostream>
+#include <stdint.h>
 
 
 // CAgoraSdkWrapperDemoDlg ¶Ô»°¿ò
@@ -55,6 +56,5 @@ private:
 	std::string m_strAppID;
 	std::string m_strChannelName;
 	UINT m_uID;
-
-
+	uint8_t m_txtId;
 };

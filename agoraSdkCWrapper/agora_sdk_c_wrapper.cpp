@@ -12,6 +12,7 @@ CAgoraObject* gPAgoraObject = nullptr;
 CFifoCmd* gPFifoCmd = nullptr;
 CBufferMgr* gPBufferMgr = nullptr;
 CAgoraOpenGl* gPOpenGl = nullptr;
+CAgoraOpenGLTexture *gPOpenGlTexture = nullptr;
 CExtendVideoFrameObserver* gPVideoObserver = nullptr;
 
 AgoraSdkCWrapperUtilc::CFileIO AgoraSdkCWrapperUtilc::gFileSDK;
@@ -31,6 +32,7 @@ void createEngine(const char *appId){
 		gPBufferMgr = CBufferMgr::getInstance();
 		gPVideoObserver = new CExtendVideoFrameObserver;
 		gPOpenGl = CAgoraOpenGl::getInstance();
+		gPOpenGlTexture = CAgoraOpenGLTexture::getInstance();
 	}
 	return;
 }
@@ -39,8 +41,17 @@ void deleteEngine(){
 
 	if (gPAgoraObject){
 		
-		if (gPVideoObserver){
+		if (gPOpenGl){
+			gPOpenGl->releaseInstance();
+			gPOpenGl = nullptr;
+		}
 
+		if (gPOpenGlTexture){
+			gPOpenGlTexture->releaseInstance();
+			gPOpenGlTexture = nullptr;
+		}
+
+		if (gPVideoObserver){
 			delete gPVideoObserver;
 			gPVideoObserver = nullptr;
 		}
@@ -470,26 +481,24 @@ int disableVideoObserver(){
 
 int generateNativeTexture(){
 
-	if (gPAgoraObject && gPOpenGl){
-			//int texId = gPOpenGl->createTexture();
+	if (gPAgoraObject && gPOpenGlTexture)
+		return gPOpenGlTexture->generateNativeTexture();
 
-		return 0;
-	}
+	return 0;
 }
 
 int updateTexture(int tex, unsigned int uid){
 
-	if (gPAgoraObject && gPOpenGl)
-		//	return gPOpenGl->updateTexture(tex, uid);
-		return 0;
+	if (gPAgoraObject && gPOpenGlTexture)
+		return gPOpenGlTexture->updateTexture(tex, uid);
+
+	return 0;
 }
 
 void deleteTexture(int tex){
 
-	if (gPAgoraObject && gPOpenGl){
-		
-	}
-	//	gPOpenGl->deleteTexture(tex);
+	if (gPAgoraObject && gPOpenGlTexture)
+		gPOpenGlTexture->deleteTexture(tex);
 }
 
 int getMessageCount(){

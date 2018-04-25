@@ -95,12 +95,11 @@ bool CBufferMgr::popYUVBuffer(UINT uid,uint8_t* pBufferOut, int &nBufferLenOut,i
 	CAutoLock al(m_pMemLock);
 	std::map<UINT, CArrayBuffer*>::iterator it = m_mapUserBufferMgr.find(uid);
 	if (m_mapUserBufferMgr.end() != it){
-		return it->second->pop(pBufferOut, nBufferLenOut);
+
+		return it->second->pop(pBufferOut, nBufferLenOut,nWidth,nHeight);
 	}
 
 	nBufferLenOut = 0;
-	nWidth = 0;
-	nHeight = 0;
 
 	return false;
 }
@@ -195,24 +194,32 @@ bool CArrayBuffer::push(int nWidth, int nHeight, uint8_t* pBufferIn, const int &
 		bRes = true;
 	}
 
+	//CAgoraWrapperUtilc::AgoraOutDebugStr(_T(" push %d , nWritePoint : %d, nByteWrited : %d"),nBufferLen,m_nWritePoint,m_nByteWrited);
+
 	return bRes;
 }
 
-bool CArrayBuffer::pop(uint8_t* pBufferOut, int &nBufferLen){
+bool CArrayBuffer::pop(uint8_t* pBufferOut, int &nBufferLen, int &nWidth, int &nHeight){
 
 	bool bRes = false;
 
 	CAutoLock al(&m_lock);
 	if (m_nByteWrited){
 
+		bRes = true;
 		nBufferLen = m_nLen;
+		nWidth = m_nWidth;
+		nHeight = m_nHeight;
+
 		memcpy((void*)pBufferOut, m_pBuffer + m_nReadPoint, m_nLen);
 
-		m_nByteWrited += m_nLen;
+		m_nByteWrited -= nBufferLen;
 		if (m_nReadPoint == m_nCapacity){
 			m_nReadPoint = 0;
 		}
 	}
+
+	//CAgoraWrapperUtilc::AgoraOutDebugStr(_T(" pop %d , nReadPoint : %d, nByteWrited : %d"), nBufferLen, m_nReadPoint, m_nByteWrited);
 
 	return bRes;
 }

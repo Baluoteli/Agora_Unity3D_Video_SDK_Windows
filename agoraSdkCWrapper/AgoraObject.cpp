@@ -70,7 +70,7 @@ int CAgoraObject::JoinChannel(const char *channelKey, const char *channelName, c
 {
 	int nRet = 0;
 
-	
+	m_nSelfUID = uid;
 	LPCSTR lpStreamInfo = "{\"owner\":true,\"width\":640,\"height\":480,\"bitrate\":500}";
 	nRet = m_lpAgoraEngine->joinChannel(channelKey, channelName, lpStreamInfo, uid);
 
