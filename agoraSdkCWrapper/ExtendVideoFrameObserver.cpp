@@ -4,8 +4,16 @@
 
 using namespace AgoraSdkCWrapperUtilc;
 
-#include "libyuv.h"
-#pragma comment(lib,"yuv.lib")
+#include "../../../../media_engine/src/third_party/libyuv/include/libyuv.h"
+
+#if defined  WIN32
+#if defined _M_IX86
+#pragma comment(lib,"../../../../media_engine/build/cmake_video/build_vs2013_video_x86/lib/Release/libyuv.lib")
+#elif defined _M_X64
+#pragma comment(lib,"../../../../media_engine/build/cmake_video/build_vs2013_video_x86/x64/Release/libyuv.lib")
+#endif
+#endif
+
 #pragma warning(disable:4099)
 
 CExtendVideoFrameObserver::CExtendVideoFrameObserver() :m_uUidSelf(0)
@@ -13,17 +21,21 @@ CExtendVideoFrameObserver::CExtendVideoFrameObserver() :m_uUidSelf(0)
 	m_lpImageBufferLocal = new BYTE[0x800000];
 	m_lpImageBufferRemote = new BYTE[0x800000];
 
+#ifdef Agora_Dump
 	std::string strPathLocal = CAgoraWrapperUtilc::getAbsoluteDir() + "Localyuv.yuv";
-	//m_fileLocalYUV.openMedia(strPathLocal.data());
+	m_fileLocalYUV.openMedia(strPathLocal.data());
 
 	std::string strPathRemote = CAgoraWrapperUtilc::getAbsoluteDir() + "RemoteYuv.yuv";
-	//m_fileRemoteYUV.openMedia(strPathRemote.data());
+	m_fileRemoteYUV.openMedia(strPathRemote.data());
+#endif
 }
 
 CExtendVideoFrameObserver::~CExtendVideoFrameObserver()
 {
-	//m_fileRemoteYUV.close();
-	//m_fileLocalYUV.close();
+#ifdef Agora_Dump
+	m_fileRemoteYUV.close();
+	m_fileLocalYUV.close();
+#endif
 
 	delete[] m_lpImageBufferLocal; 
 	m_lpImageBufferLocal = nullptr;
@@ -36,7 +48,9 @@ CExtendVideoFrameObserver::~CExtendVideoFrameObserver()
 bool CExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 {
 	DWORD dStart = GetTickCount();
-	//CAgoraWrapperUtilc::AgoraOutDebugStr(_T(__FUNCTION__));
+#if 0
+	CAgoraWrapperUtilc::AgoraOutDebugStr(_T(__FUNCTION__));
+#endif
 
 #if 0
 	std::string sPathYUV = CAgoraWrapperUtilc::getAbsoluteDir() + "123.yuv";
@@ -62,7 +76,6 @@ bool CExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 	memcpy_s(m_lpImageBufferLocal + nYStride * nHeight + nUStride * nHeight / 2, nVStride * nHeight / 2, videoFrame.vBuffer, nVStride * nHeight / 2);
 
 	int nBufferLen = nWidth * nHeight * 3 / 2;
-	//m_fileLocalYUV.write((char*)m_lpImageBufferLocal,nBufferLen);
 
 	CBufferMgr::getInstance()->pushYUVBuffer(m_uUidSelf, (uint8_t*)m_lpImageBufferLocal, nBufferLen, nWidth, nHeight);
 #endif;
@@ -114,7 +127,10 @@ bool CExtendVideoFrameObserver::onCaptureVideoFrame(VideoFrame& videoFrame)
 #endif
 
 	DWORD dwEnd = GetTickCount();
-	//CAgoraWrapperUtilc::AgoraOutDebugStr(_T("onCaptureVideoFrame : %u\n"),dwEnd - dStart);
+
+#if 0
+	CAgoraWrapperUtilc::AgoraOutDebugStr(_T("onCaptureVideoFrame : %u\n"),dwEnd - dStart);
+#endif
 
 	return FALSE;
 }
@@ -137,7 +153,7 @@ bool CExtendVideoFrameObserver::onRenderVideoFrame(unsigned int uid, VideoFrame&
 	int nBufferLen = nWidth * nHeight * 3 / 2;
 	m_fileRemoteYUV.write((char*)m_lpImageBufferRemote,nBufferLen);
 
-	//CBufferMgr::getInstance()->pushYUVBuffer(uid, (uint8_t*)m_lpImageBufferRemote, nBufferLen, nWidth, nHeight);
+	CBufferMgr::getInstance()->pushYUVBuffer(uid, (uint8_t*)m_lpImageBufferRemote, nBufferLen, nWidth, nHeight);
 #endif
 
 	libyuv::I420ToRGBA((uint8_t*)videoFrame.yBuffer, videoFrame.yStride,
@@ -146,7 +162,9 @@ bool CExtendVideoFrameObserver::onRenderVideoFrame(unsigned int uid, VideoFrame&
 		m_lpImageBufferLocal, nWidth * 4,
 		nWidth, nHeight);
 	int nBufferLen = nWidth * nHeight * 4;
+#if 0
 	//m_fileLocalYUV.write((char*)m_lpImageBufferLocal, nBufferLen);
+#endif
 	CBufferMgr::getInstance()->pushYUVBuffer(uid, (uint8_t*)m_lpImageBufferLocal, nBufferLen, nWidth, nHeight);
 
 	return true;

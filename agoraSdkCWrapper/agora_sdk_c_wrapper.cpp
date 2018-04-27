@@ -1,18 +1,15 @@
-#include "AgoraUilc.h"
+#include "AgoraUtilc.h"
 #include "agora_sdk_c_wrapper.h"
 #include "ExtendVideoFrameObserver.h"
 
 #include "AgoraObject.h"
 #include "MsgList.h"
 #include "CBufferMgr.h"
-#include "AgoraOpenGl.h"
 using namespace AgoraSdkCWrapperUtilc;
 
 CAgoraObject* gPAgoraObject = nullptr;
 CFifoCmd* gPFifoCmd = nullptr;
 CBufferMgr* gPBufferMgr = nullptr;
-CAgoraOpenGl* gPOpenGl = nullptr;
-CAgoraOpenGLTexture *gPOpenGlTexture = nullptr;
 CExtendVideoFrameObserver* gPVideoObserver = nullptr;
 
 AgoraSdkCWrapperUtilc::CFileIO AgoraSdkCWrapperUtilc::gFileSDK;
@@ -31,8 +28,6 @@ void createEngine(const char *appId){
 
 		gPBufferMgr = CBufferMgr::getInstance();
 		gPVideoObserver = new CExtendVideoFrameObserver;
-		gPOpenGl = CAgoraOpenGl::getInstance();
-		gPOpenGlTexture = CAgoraOpenGLTexture::getInstance();
 	}
 	return;
 }
@@ -40,16 +35,6 @@ void createEngine(const char *appId){
 void deleteEngine(){
 
 	if (gPAgoraObject){
-		
-		if (gPOpenGl){
-			gPOpenGl->releaseInstance();
-			gPOpenGl = nullptr;
-		}
-
-		if (gPOpenGlTexture){
-			gPOpenGlTexture->releaseInstance();
-			gPOpenGlTexture = nullptr;
-		}
 
 		if (gPVideoObserver){
 			delete gPVideoObserver;
@@ -481,24 +466,16 @@ int disableVideoObserver(){
 
 int generateNativeTexture(){
 
-	if (gPAgoraObject && gPOpenGlTexture)
-		return gPOpenGlTexture->generateNativeTexture();
-
 	return 0;
 }
 
 int updateTexture(int tex, unsigned int uid){
-
-	if (gPAgoraObject && gPOpenGlTexture)
-		return gPOpenGlTexture->updateTexture(tex, uid);
 
 	return 0;
 }
 
 void deleteTexture(int tex){
 
-	if (gPAgoraObject && gPOpenGlTexture)
-		gPOpenGlTexture->deleteTexture(tex);
 }
 
 int getMessageCount(){

@@ -1,7 +1,7 @@
 #ifndef __AGENGINEEVENTHANDLE_H__
 #define __AGENGINEEVENTHANDLE_H__
 
-#include "AgoraUilc.h"
+#include "AgoraUtilc.h"
 using namespace  AgoraSdkCWrapperUtilc;
 
 class CFifoCmd;

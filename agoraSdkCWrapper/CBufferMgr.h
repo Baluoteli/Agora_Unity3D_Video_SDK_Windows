@@ -1,7 +1,7 @@
 #ifndef __CBUFFERMGR_H__
 #define __CBUFFERMGR_H__
 
-#include "AgoraUilc.h"
+#include "AgoraUtilc.h"
 using namespace AgoraSdkCWrapperUtilc;
 #include "stdint.h"
 

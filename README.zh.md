@@ -9,13 +9,13 @@
 
 - 视频回掉：getRGBAVideoData，通过传入uid,获取有效的RGBA数据
 
-
+程序提供了x86和x64位两套库，客户针对不同的应用环境选择不同的库，agora_sdk_c_wrapper.h包含所有的api的函数说明.
 本开源项目使用 **C++** 语言
 
 ## 运行示例程序
 首先在 [Agora.io 注册](https://dashboard.agora.io/cn/signup/) 注册账号，并创建自己的测试项目，获取到 App ID。将 APP_ID宏定义内容改为刚才申请的 App ID
 
-程序提供了x86和x64位两套库，客户针对不同的应用环境选择不同的库，agora_sdk_c_wrapper.h包含所有的api的函数说明.
+
 
 
 ## 联系我们

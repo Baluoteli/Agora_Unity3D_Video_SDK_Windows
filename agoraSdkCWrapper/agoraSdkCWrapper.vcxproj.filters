@@ -24,9 +24,6 @@
     <ClInclude Include="AGEngineEventHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AgoraUilc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MsgList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -36,7 +33,7 @@
     <ClInclude Include="CBufferMgr.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AgoraOpenGl.h">
+    <ClInclude Include="AgoraUtilc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -57,9 +54,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CBufferMgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AgoraOpenGl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
